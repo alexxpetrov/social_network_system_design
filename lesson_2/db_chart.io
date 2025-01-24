@@ -3,7 +3,7 @@
 
 // S3
 Table media {
-  URI string
+  url string
   size integer
   post_id string
   published_by string
@@ -33,6 +33,7 @@ Table relations {
   friends string[]
   relationships string[]
   subscribers string[]
+  user_id string,
 }
 
 // RDMS PostgreSQL

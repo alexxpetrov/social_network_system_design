@@ -1,3 +1,10 @@
+// Replication
+// - master-slave
+// - replication_factor = 3
+//
+// Sharding
+// key based by user_id
+
 CREATE TABLE "messages" (
   "id" string,
   "content" string,

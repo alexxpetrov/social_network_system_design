@@ -1,3 +1,10 @@
+// Replication
+// - master-slave
+// - replication_factor = 3
+//
+// Sharding
+// key based by id
+
 CREATE TABLE "profile" (
   "id" string,
   "name" string,
