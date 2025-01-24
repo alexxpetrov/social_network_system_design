@@ -1,0 +1,704 @@
+openapi: 3.0.3
+info:
+  title: Swagger Social network - OpenAPI 3.0
+  description: |-
+    This is a sample Rest API for a social network based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). 
+    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://social.swagger.io/api/v3
+tags:
+  - name: user
+    description: Operations about user
+paths:
+  /users/{id}/addFriend/${friendId}:
+    post:
+      tags:
+        - user
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      - name: friendId
+        in: path
+        description: 'Friend id '
+        required: true
+        schema:
+          type: string
+      summary: Add friend
+      description: This can only be done by the logged in user.
+      operationId: addFriend
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{id}/removeFriend/${friendId}:
+    delete:
+      tags:
+        - user
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      - name: friendId
+        in: path
+        description: 'Friend id '
+        required: true
+        schema:
+          type: string
+      summary: Remove friend
+      description: This can only be done by the logged in user.
+      operationId: removeFriend
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{id}/getUserFriends:
+    get:
+      tags:
+        - user
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      summary: Returns an array of users that are friend of the requested user
+      description: Returns an array of users that are friend of the requested user
+      operationId: getUserFriends
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Users'
+        default:
+          description: successful operation
+  /users/{id}/getUserProfile:
+    get:
+      tags:
+        - user
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      summary: Returns user object profile
+      description: Returns user object profile
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: successful operation
+  /users/{id}/publishFeedPost:
+    post:
+      tags:
+        - user
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Post body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+      summary: Publish post to feed
+      description: Publish post to feed
+      operationId: publishFeedPost
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Post'    
+  
+  /posts/{id}/uploadMedia:
+    post:
+      tags:
+        - posts
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Post body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMedia'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PostMedia'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostMedia'
+      summary: Upload media to post
+      description: Upload media to post
+      operationId: uploadMediaPost
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Post'
+  
+  /chats/{id}/view:
+    get:
+      tags:
+        - chats
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      summary: Get chat info
+      description: Returns chat data
+      operationId: viewChat
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        default:
+          description: successful operation
+  /chats/{id}/sendMessages:
+    post:
+      tags:
+        - chats
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Post body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMessages'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PostMessages'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostMessages'
+      summary: Sends messages to chat id
+      description: Returns chat messages that were sent
+      operationId: chatSendMessages
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Messages'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Messages'
+        default:
+          description: successful operation
+  /chats/{id}/readMessages:
+    get:
+      tags:
+        - chats
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      summary: Read chat messages
+      description: Returns chat message array
+      operationId: chatReadMessages
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Messages'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Messages'
+        default:
+          description: successful operation
+  
+  /dialogs/{id}/view:
+    get:
+      tags:
+        - dialogs
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      summary: Get dialog data
+      description: Returns dialog info by id
+      operationId: viewDialog
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dialog'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Dialog'
+        default:
+          description: successful operation
+  /dialogs/{id}/sendMessages:
+    post:
+      tags:
+        - dialogs
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Post body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMessages'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PostMessages'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostMessages'
+      summary: Sends messages to the chat by id
+      description: Returns messages that were sent
+      operationId: dialogSendMessages
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Messages'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Messages'
+        default:
+          description: successful operation
+  /dialogs/{id}/readMessages:
+    get:
+      tags:
+        - dialogs
+      parameters:
+      - name: id
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      summary: Returns messages of dialog by id
+      description: Returns messages
+      operationId: dialogReadMessages
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Messages'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Messages'
+        default:
+          description: successful operation
+          
+  /feed/{userId}/posts:
+     post:
+      tags:
+        - feed
+      parameters:
+      - name: userId
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Post body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+      summary: Returns ok. Sends Post schema
+      description: Returns ok. Sends Post schema
+      operationId: feedCreatePost
+      responses:
+        '200':
+          description: Successful operation
+        default:
+          description: successful operation
+  /feed/{userId}/view:
+     get:
+      tags:
+        - feed
+      parameters:
+      - name: userId
+        in: path
+        description: 'User id '
+        required: true
+        schema:
+          type: string
+      summary: Returns feed of user
+      description: Returns feed of user by user id
+      operationId: feedView
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feed'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Feed'
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: '#/components/schemas/Feed'
+        default:
+          description: successful operation
+          
+  # /users/{username}:
+  #   get:
+  #     tags:
+  #       - user
+  #     summary: Get user by user name
+  #     description: ''
+  #     operationId: getUserByName
+  #     parameters:
+  #       - name: username
+  #         in: path
+  #         description: 'The name that needs to be fetched. Use user1 for testing. '
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: successful operation
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/User'          
+  #           application/xml:
+  #             schema:
+  #               $ref: '#/components/schemas/User'
+  #       '400':
+  #         description: Invalid username supplied
+  #       '404':
+  #         description: User not found
+  #   put:
+  #     tags:
+  #       - user
+  #     summary: Update user
+  #     description: This can only be done by the logged in user.
+  #     operationId: updateUser
+  #     parameters:
+  #       - name: username
+  #         in: path
+  #         description: name that need to be deleted
+  #         required: true
+  #         schema:
+  #           type: string
+  #     requestBody:
+  #       description: Update an existent user in the store
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/User'
+  #         application/xml:
+  #           schema:
+  #             $ref: '#/components/schemas/User'
+  #         application/x-www-form-urlencoded:
+  #           schema:
+  #             $ref: '#/components/schemas/User'
+  #     responses:
+  #       default:
+  #         description: successful operation
+  #   delete:
+  #     tags:
+  #       - user
+  #     summary: Delete user
+  #     description: This can only be done by the logged in user.
+  #     operationId: deleteUser
+  #     parameters:
+  #       - name: username
+  #         in: path
+  #         description: The name that needs to be deleted
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '400':
+  #         description: Invalid username supplied
+  #       '404':
+  #         description: User not found
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        userId:
+          type: integer
+          format: int64
+          example: 1
+        timestamp:
+          type: string
+          format: date-time
+        title:
+          type: string
+          example: Post Title
+        content:
+          type: string
+          example: Post content
+      xml:
+        name: post
+    Posts:
+      type: array
+      items:
+        $ref: '#/components/schemas/Post'
+    PostMedia:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        postId:
+          type: integer
+          format: int64
+          example: 1
+        URI:
+          type: string
+          example: s3://test-content-uri.com
+        timestamp:
+          type: string
+          format: date-time
+      xml:
+        name: post    
+    Chat:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Chat name
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      xml:
+        name: category
+    PostMessage:
+      type: object
+      properties:
+        content:
+          type: string
+          example: Message send content
+    PostMessages:
+      type: array
+      items:
+        $ref: '#/components/schemas/PostMessage'
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        content:
+          type: string
+          example: Message content
+        chatId:
+          type: integer
+          format: int64
+          example: 2
+      xml:
+        name: messages
+    Messages:
+      type: array
+      items:
+        $ref: '#/components/schemas/Message'
+    
+      
+    Dialog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Dialog name
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      xml:
+        name: category
+    Users:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: '12345'
+        phone:
+          type: string
+          example: '12345'
+        userStatus:
+          type: integer
+          description: User Status
+          format: int32
+          example: 1
+      xml:
+        name: user
+    Feed:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+          example: 1
+        posts: 
+          type: array
+          items:
+            $ref: '#/components/schemas/Posts'
+        offset:
+          type: integer
+          format: int64
+          example: 10
+        limit:
+          type: integer
+          format: int64
+          example: 50
+      xml:
+        name: tag
+  requestBodies:
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
