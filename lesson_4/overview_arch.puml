@@ -1,0 +1,10 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User")
+Container(coreSystem, "Core system", "Software system", "Social network system. Allows users to communicate with friends, send messages and view timeline")
+Container(analyticsSystem, "Analytics system", "Software system", "Stores different analytic information about users, posts, messages and corresponding metrics")
+
+Rel(user, coreSystem, "User accesses his feed, friends, messages")
+Rel(coreSystem, analyticsSystem, "Sends analytics data for users, posts, messages")
+@enduml
