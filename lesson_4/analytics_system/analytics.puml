@@ -1,0 +1,22 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User")
+Container(loadBalancer, "Load Balancer", "Nginx", "Uses round robin")
+ContainerQueue(messageQueue, "Events queue", "Kafka", "Message queue for events by user, message, post and feedback")
+Container(coreSystem, "Core system", "Software system", "Sends different analytic information about core system and user activity.")
+
+System_Boundary(analyticsSystem, "Analytics system") {
+    Container(analyticsService, "Analytics Service", "Go", "Handles requests by user activity and each hour stores aggregated information for post/user to cache", $tags="webApp")
+    ContainerDb(analyticsDatabase, "Analytics database", "ClickHouse", "Stores analytics information about user/system/post activity",  $tags="db")
+    ContainerDb(analyticsCache, "Analytics cache", "Redis", "Stores aggregated information about user/system/post",  $tags="db")
+}
+
+Rel(user, loadBalancer, "Gets user/system information analytics", "REST")
+Rel(loadBalancer, analyticsService, "Requests user/system analytics", "REST")
+
+Rel(coreSystem, messageQueue, "Publishes user/system activity and events")
+Rel(analyticsService, messageQueue, "Subscribes to events from Core system")
+Rel(analyticsService, analyticsDatabase, "OLAP storage. Stores user/system events in a persistent storage.")
+Rel(analyticsService, analyticsCache, "Gets user/system activity information requested by user")
+@enduml

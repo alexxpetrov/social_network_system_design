@@ -1,0 +1,70 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User")
+Container(dnsBalancer, "DNS Balancer", "DNS Proxy", "Determines the target DC")
+Container(loadBalancer, "Load Balancer", "Nginx", "Uses round robin")
+Container(apiGateway, "API Gateway", "Proxy", "Authenticates user")
+
+System_Boundary(coreSystem, "Core system") {
+    Container(userService, "User Service", "Go", "Handles user registration/login etc", $tags="webApp")
+    ContainerDb(userDatabase, "User database", "PgSQL", "Stores users",  $tags="db")
+
+    Container(messagesService, "Message Service", "Go", "Handles message send/view", $tags="webApp")
+    ContainerDb(messagesCache, "Message Cache", "Redis", "Stores dialog/chat messages. Cache last 20 messages",  $tags="db")
+    ContainerDb(messagesDatabase, "Message Database", "ScyllaDB", "Stores user messages. Replication factor of 3.",  $tags="db")
+
+    Container(postService, "Post Service", "Go", "Handles user registration/login etc", $tags="webApp")
+    ContainerDb(postDatabase, "Post Database", "PgSQL", "Stores posts",  $tags="db")
+
+    Container(mediaService, "Media Service", "Go", "Handles user registration/login etc", $tags="webApp")
+    Container(mediaTemporaryService, "Media Service worker", "Go", "Handles removal of non-posted media from S3 Temporary bucket", $tags="webApp")
+    ContainerDb(mediaS3, "Media S3 Bucket", "AWS S3", "Stores",  $tags="db")
+
+    Container(feedService, "Feed Service", "Go", "Handles user registration/login etc", $tags="webApp")
+    ContainerDb(feedCache, "Feed cache", "Redis", "Stores pre-generated user feed. Cellebrity table. Celebrity posts are added on the fly based on a) cache; b) subscriptions.",  $tags="db")
+
+    Container(postFeedbackService, "Post Feedback service", "Go", "Handles post feedback like/comment operations", $tags="webApp")
+    ContainerDb(postFeedbackCache, "Post Feedback cache", "Redis", "Caches post likes/comments count + last ~5-10 authors by postId",  $tags="db")
+    ContainerDb(postFeedbackDatabase, "Post Feedback database", "PgSQL", "Stores post likes/comments by postId",  $tags="db")
+
+    Container(relationService, "Relation service", "Go", "Generates user relations.", $tags="webApp")
+    ContainerDb(relationDatabase, "Relation database", "Redis", "Stores user relations.",  $tags="db")
+}
+
+ContainerQueue(messageQueue, "Events queue", "Kafka", "Message queue for user, post, message, feedback events")
+Container(analyticsSystem, "Analytics system", "Software system", "Stores different analytic information about users, posts, messages")
+
+Rel(user, dnsBalancer, "Access core system platform", "REST")
+Rel(dnsBalancer, loadBalancer, "Access core system platform", "REST")
+Rel(loadBalancer, apiGateway, "Access core system platform", "REST")
+Rel(apiGateway, userService, "Create, get, edit user", "REST")
+Rel(userService, userDatabase, "Creates and stores users")
+Rel(userService, messageQueue, "Publish user events")
+
+Rel(apiGateway, postService, "Create, get, edit post", "REST")
+Rel(postService, postDatabase, "Creates and stores posts")
+Rel(postService, messageQueue, "Publish post created event")
+
+Rel(apiGateway, messagesService, "Create, get, edit message", "REST")
+Rel(messagesService, messagesCache, "Retrieve/set message cache")
+Rel(messagesService, messagesDatabase, "Retrieve/set message to DB")
+Rel(messagesService, messageQueue, "Publishes message events")
+
+Rel(apiGateway, feedService, "View feed", "REST")
+Rel(feedService, relationService, "Request user relations")
+Rel(relationService, relationDatabase, "Retrieve user relations")
+Rel(feedService, feedCache, "Retrieves feed from its own cache")
+Rel(feedService, postService, "Retrieve posts in case Feed cache is denied.")
+Rel(feedService, postFeedbackService, "Request feedback data for each post")
+Rel(postFeedbackService, postFeedbackCache, "Retrieves feedback data for each post")
+Rel(postFeedbackCache, postFeedbackDatabase, "Persistent storage of feedback data for each post")
+Rel(postFeedbackService, messageQueue, "Publishes feedback events for comment/like")
+
+Rel(apiGateway, mediaService, "Upload/view media", "REST")
+Rel(mediaService, mediaTemporaryService, "Uploads all media to temporary bucket. All unpublished media is dropped. New bucket is created on an interval.")
+Rel(mediaTemporaryService, mediaS3, "Moves published media to corresponding S3 Bucket")
+Rel(mediaService, messageQueue, "Publish media events")
+
+Rel(analyticsSystem, messageQueue, "Subscribes to user/system events from core system")
+@enduml
