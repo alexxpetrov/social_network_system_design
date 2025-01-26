@@ -32,9 +32,9 @@ The API includes the following key functionalities:
 | View User's Friends | GET             | `/users/{id}/getUserFriends`                  | Retrieve the user's friend list     |
 
 ### User Profile
-| **Operation**      | **HTTP Method** | **Endpoint**                | **Description**             |
-|---------------------|-----------------|-----------------------------|-----------------------------|
-| Get User Profile    | GET             | `/users/{id}/getUserProfile`| Retrieve a user's profile   |
+| **Operation**         | **HTTP Method** | **Endpoint**                | **Description**             |
+|-----------------------|-----------------|-----------------------------|-----------------------------|
+| Get User Profile      | GET             | `/users/{id}/getUserProfile`| Retrieve a user's profile   |
 
 ### Feed Management
 | **Operation**        | **HTTP Method** | **Endpoint**                 | **Description**                          |
