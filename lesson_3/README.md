@@ -21,11 +21,13 @@
 | Posts | post/edit/delete |
 | Post type | text / text + media |
 | User profile | add/edit/view |
+|  |  |  |
 
 **Non-functional requirements**:
 
 | DAU | 70,000,000 |
 | --- | --- |
+| Availability | 99.95% |
 | Avg. post size | 4000 bytes |
 | Max. post size | 10000 bytes |
 | Avg. post read / day | 20 |
@@ -37,6 +39,7 @@
 | Max group members count | 1000 |
 | Max channel subscribers | 100,000 |
 | Users geolocation/region | USA/EU |
+|  |  |  |
 
 **Load**:
 
